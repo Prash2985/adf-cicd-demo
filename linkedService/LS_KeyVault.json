@@ -1,0 +1,10 @@
+{
+	"name": "LS_KeyVault",
+	"properties": {
+		"annotations": [],
+		"type": "AzureKeyVault",
+		"typeProperties": {
+			"baseUrl": "https://adfdemo-kv-dev.vault.azure.net/"
+		}
+	}
+}
