@@ -10,6 +10,14 @@
 		"LS_InputBlob_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'LS_InputBlob'"
+		},
+		"LS_Blob_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "blobstorageconnectionstring"
+		},
+		"LS_KeyVault_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://adfdemo-kv-dev.vault.azure.net/"
 		}
 	},
 	"variables": {
@@ -23,7 +31,7 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Copy Json",
+						"name": "Copy Blob",
 						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
@@ -60,14 +68,14 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "DS_inputBlob",
+								"referenceName": "DS_input_blob",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "DS_outputBlob",
+								"referenceName": "DS_output_blob",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -81,17 +89,17 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/DS_inputBlob')]",
-				"[concat(variables('factoryId'), '/datasets/DS_outputBlob')]"
+				"[concat(variables('factoryId'), '/datasets/DS_input_blob')]",
+				"[concat(variables('factoryId'), '/datasets/DS_output_blob')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DS_inputBlob')]",
+			"name": "[concat(parameters('factoryName'), '/DS_input_blob')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "LS_InputBlob",
+					"referenceName": "LS_Blob",
 					"type": "LinkedServiceReference"
 				},
 				"annotations": [],
@@ -99,7 +107,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"container": "input-container"
+						"container": "input"
 					}
 				},
 				"schema": {
@@ -115,16 +123,16 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_InputBlob')]"
+				"[concat(variables('factoryId'), '/linkedServices/LS_Blob')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DS_outputBlob')]",
+			"name": "[concat(parameters('factoryName'), '/DS_output_blob')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "LS_InputBlob",
+					"referenceName": "LS_Blob",
 					"type": "LinkedServiceReference"
 				},
 				"annotations": [],
@@ -132,7 +140,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"container": "output-container"
+						"container": "output"
 					}
 				},
 				"schema": {
@@ -148,7 +156,29 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_InputBlob')]"
+				"[concat(variables('factoryId'), '/linkedServices/LS_Blob')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LS_Blob')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "LS_KeyVault",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "[parameters('LS_Blob_properties_typeProperties_connectionString_secretName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_KeyVault')]"
 			]
 		},
 		{
@@ -160,6 +190,19 @@
 				"type": "AzureBlobStorage",
 				"typeProperties": {
 					"connectionString": "[parameters('LS_InputBlob_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LS_KeyVault')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureKeyVault",
+				"typeProperties": {
+					"baseUrl": "[parameters('LS_KeyVault_properties_typeProperties_baseUrl')]"
 				}
 			},
 			"dependsOn": []
@@ -185,7 +228,7 @@
 					"recurrence": {
 						"frequency": "Hour",
 						"interval": 5,
-						"startTime": "2023-04-03T09:45:00",
+						"startTime": "2023-04-03T11:43:00",
 						"timeZone": "India Standard Time"
 					}
 				}
