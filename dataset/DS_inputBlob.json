@@ -1,0 +1,28 @@
+{
+	"name": "DS_inputBlob",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_InputBlob",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "input-container"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"title": {
+					"type": "string"
+				},
+				"value": {
+					"type": "string"
+				}
+			}
+		}
+	}
+}
