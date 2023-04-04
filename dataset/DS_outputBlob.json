@@ -1,8 +1,8 @@
 {
-	"name": "DS_input_blob",
+	"name": "DS_outputBlob",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "LS_Blob",
+			"referenceName": "LS_InputBlob",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"container": "input"
+				"container": "output-container"
 			}
 		},
 		"schema": {
