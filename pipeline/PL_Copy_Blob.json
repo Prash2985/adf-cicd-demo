@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy Blob",
+				"name": "Copy Json",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -40,13 +40,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "DS_input_blob",
+						"referenceName": "DS_inputBlob",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "DS_output_blob",
+						"referenceName": "DS_outputBlob",
 						"type": "DatasetReference"
 					}
 				]
